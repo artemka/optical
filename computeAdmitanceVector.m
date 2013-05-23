@@ -1,19 +1,27 @@
-function [A, deltaA] = computeAdmitanceVector(refractiveIndexes, k, h)
+function [A, deltaA] = computeAdmitanceVector(n, k, options)
+	% reading options
+	n0 = options(1);
+	na = options(2);
+	H = options(3);
+	N = options(4);
 	
-	l = length(refractiveIndexes);
+	
+	d = H / N; % layer thickness
+	
+	nExtended = [n0 n];
+	
+	l = length(nExtended);
 	kl = length(k);
 	
-	k = 2 * 3.1415 / k;
-	
-	A = ones(kl, l);
+	A = ones(1, l);
 	deltaA = ones(kl, l - 2);
 	
-	A(:, 1) = refractiveIndexes(1);
+	A(1) = nExtended(1);
 	
-	for n=2:l
-		nj = refractiveIndexes(n);
-		phij = k' * nj * h;
-		A(:, n) = ( i * nj * sin(phij) + A(:, n-1) .* cos(phij) )./( cos(phij) + (i/nj) * A(:, n-1) .* sin(phij)); 
+	for m=2:l
+		nj = nExtended(m);
+		phij = k * nj * d;
+		A(m) = ( i * nj * sin(phij) + A(m-1) * cos(phij) )/( cos(phij) + (i/nj) * A(m-1) * sin(phij)); 
 	end
 	
 	#{
@@ -26,6 +34,8 @@ function [A, deltaA] = computeAdmitanceVector(refractiveIndexes, k, h)
 		deltaA(m - 1) = numerator / denominator;
 	end
 	#}
+
+
 endfunction
 
 

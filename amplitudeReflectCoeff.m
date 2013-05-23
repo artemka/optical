@@ -1,6 +1,9 @@
-function r = amplitudeReflectCoeff(n, k, h)
-	A = computeAdmitanceVector(n, k, h);
-	Aa = A(:, length(A))';
-	na = n(length(n));
-	r = (na - Aa)./(na + Aa);
+function r = amplitudeReflectCoeff(n, k, options)
+	% options reading
+	na = options(2);
+	
+	A = computeAdmitanceVector(n, k, options);
+	
+	Aa = A(length(A));
+	r = (na - Aa)/(na + Aa);
 endfunction 
